@@ -1,60 +1,78 @@
-# Decomposing the Equity Yield Term Structure
+# Safe Have Currencies and the Russia-Ukraine War
 
-## A calculation of equity yields on Eurostoxx 50 and a variance decomposition into risk premium and expected growth.
+## An estimation of linear and non-linear safe haven capabilities of the Swiss franc, the euro, the yen, and the British pound against the U.S. dollar
 
+The main linear regression model used in this project is the following:
 
-This project is about calculating **equity yields** $e_t^{(n)}$ on the Eurostoxx 50 and to decompose them into a its dividend **risk premium** $\theta_t^{(n)}$ and expected **dividend growth** $g_t^{(n)}$: 
+$$
+R^e_t = \alpha + \beta_1 \text{SP}_t + \beta_2\text{TreasNote}_t + \beta_3'\text{Risk}_t +\\ \beta_4 \text{SP}_{t-1} + \beta_5\text{TreasNote}_{t-1} + \beta_6'\text{Risk}_{t-1} + \beta_7R_{t-1}^e + \varepsilon_t
+$$
 
-$$ e_t^{(n)} = \theta_t^{(n)} - g_t^{(n)} $$
+Where **excess FX returns** $R^e_t$ is estimated for all currency-pairs *CHF/USD*, *EUR/USD*, *JPY/USD*, and *GBP/USD*. The first three regressors are the returns on S&P500 futures ($\text{SP}_t$), Treasury Notes futures ($\text{TreasNote}_t$), and then three measures of risk ($\text{Risk}_t$). The rest of the regressors are lags of the regressors, and then also of the dependent variable. Of main interest are the first three coefficients. Ranaldo & Söderling (2010) argues that the first three coefficients measures statistical **safe haven capabilities**. A good safe haven has $\beta_1 < 0$, $\beta_2 > 0$ and $\beta_3 > 0$. 
 
-$e_t^{(n)}$ is derived from dividend futures data and $g_t^{(m)}$ is estimated using a prediction OLS model and a VAR(1) model. The methodology follows that of van Binsbergen et. al. (2013). The main part of the exercise is to do a variance decomposition of equity yields to gain insights into the predictability of dividend risk premium and expected growth rates.
+Two non-linear models are also estimated. The first one is a partial linear model: 
 
-## 1. Notebook Outline 
+$$ R^e_t = g(x_{1,t}) + \beta' x_{2,t} + \varepsilon_t $$
 
-Note that the notebook is separated into 11 sections:
+where one regressor $x_{1,t}$ takes on any non-parametric transformation $g(\cdot)$ estimated using *Robinson's double residual method* (Robinson, 1988), while the rest takes on linear transformations. This estimation is done for $\text{SP}_t$, $\text{TreasNote}_t$ and $\text{Risk}_t$. The second non-linear model used is a piecewise linear model:
 
-1. Model Specification
-2. Preliminaries
-3. Data Importation
-4. Data Handling
-5. Figure 1
-6. Finalize Features and Outcomes
-7. Figure 2
-8. Predictive OLS Model
-9. VAR(1) Model
-10. Variance Decomposition
-11. Appendix Plots
+$$ R^e_t = \gamma_0 + \gamma_1 x_1 + \gamma_2 \max\{x_t - \xi, 0\} + \varepsilon_t $$
+
+where parameters $\gamma_0, \gamma_1, \gamma_2$ and $\xi$ are estimated using Hansen (1982) 2SGMM. This model is used to compare the non-linear effects of FX volatility to the results in Ranaldo & Söderlind (2010). In addition, a dummy variable regression is used to quantify the incremental effects on these coefficients during important dates relating to the Russia-Ukraine war, to sanctions, or macroeconomic events:
+
+$$ R^e_t = \alpha + \beta_1'x_t + (D_t \times \beta_2)' x_t + \varepsilon_t $$
+
+where $D_t$ is the dummy that takes on a value of unity at the specified event-dates. 
+
+## 1. Code Outline 
+
+Note that the code is separated into 11 sections:
+
+1. []
+2. []
+3. []
+4. []
+5. []
+6. []
+7. []
+8. []
+9. []
+10. []
+11. []
 
 ## 2. Preliminaries
 
 The following specifications (version) were used for this project:
-- Computer: MacBook Air M1 GPU
-- Operating system: Darwin 
-- Python (3.10.6)
-- IDE: Jupyter Notebook (6.5.2)
-- Pandas (1.5.2)
-- Numpy (1.24.1)
-- xlrd (2.0.1)
-- openpyxl (3.0.10)
-- statsmodels (0.13.5)
-- plotly (5.13.1)
-- platform (1.0.8)
+- Programming language: R (x.x.x)
+- IDE: Rstudio (x.x.x)
+- GMM: (x.x.x)
+- []: (x.x.x)
+- []: (x.x.x)
+- []: (x.x.x)
+- []: (x.x.x)
+- []: (x.x.x)
+- []: (x.x.x)
 
 In *section 1* the code imports the required modules for the project and checks for the versions for each module.
 
-*NOTE: if a package is not installed on the computer, you need to install the module first*. 
+*NOTE (a): The package "GMM" does not work on certain MAC computers due to missing "libgomp.1.dylib" dependency*. 
+*NOTE (b): if a package is not installed on the computer, you need to install the module first*. 
+
 
 ## 3. Replication Files
 
-To replicate the tables and figures used in the assignment. The aforementioned modules needs to be used. Furthermore, the two underlying data files: 
+To replicate the tables and figures used in the paper, the aforementioned modules needs to be used. Ideally, use the exact same version to ensure perfect replicability. The underlying data required for replication is the underlying data file:
 
-- dataset.xls
-- dividend_data.xls
+- Data.xlsx
 
-needs to be in *the same folder* as the jupyter notebook. In the first cell in *section 3*, specify the current working directory (*cwd*) where all replication files (including the notebook) are located. The *dataset.xls* contains the trading day prices of the FEXD dividend futures on the Eurostoxx 50 DVP. The file *dividend_data.xls* contains the Eurostoxx 50 DVP. 
+which contains data downloaded from Bloomberg and the event-dates used in the paper. The data is sectioned into different sheets for each category of data: foreign exchange rates, market indices, policy interest rates, and the event dates.  
 
-## 4. Full Paper Replication
+*NOTE:* the *Data.xlsx" file muse be in **the same folder** as the R code. 
 
+## 4. Running the Code for a Full Paper Replication
+
+
+(NOT FINISHED!)
 To run the code as intended, please make sure that all the modules in *section 2* are installed before importing them. Ideally, use the same versions of each module as we did. Furthermore, pay attention to *section 3: Data Importation*. In order to import the data as intended, find the working directory of all replication files and change the directory to that folder in the following line:
 
 <img width="474" alt="Screenshot 2023-03-19 at 17 19 16" src="https://user-images.githubusercontent.com/123584534/226189518-cb964f6e-df43-456e-bd1a-235aabf8c4d4.png">
