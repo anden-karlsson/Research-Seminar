@@ -8,7 +8,7 @@ $$
 R^e_t = \alpha + \beta_1 \text{SP}_t + \beta_2\text{TreasNote}_t + \beta_3'\text{Risk}_t +\\ \beta_4 \text{SP}_{t-1} + \beta_5\text{TreasNote}_{t-1} + \beta_6'\text{Risk}_{t-1} + \beta_7R_{t-1}^e + \varepsilon_t
 $$
 
-Where **excess FX returns** $R^e_t$ is estimated for all currency-pairs *CHF/USD*, *EUR/USD*, *JPY/USD*, and *GBP/USD*. The first three regressors are the returns on S&P500 futures ($\text{SP}_t$), Treasury Notes futures ($\text{TreasNote}_t$), and then three measures of risk ($\text{Risk}_t$). The rest of the regressors are lags of the regressors, and then also of the dependent variable. Of main interest are the first three coefficients. Ranaldo & Söderling (2010) argues that the first three coefficients measures statistical **safe haven capabilities**. A good safe haven has $\beta_1 < 0$, $\beta_2 > 0$ and $\beta_3 > 0$. 
+Where **excess FX returns** $R^e_t$ is estimated for all currency-pairs *CHF/USD*, *EUR/USD*, *JPY/USD*, and *GBP/USD*. The first three regressors are the returns on S&P500 futures ($\text{SP}_t$), Treasury Notes futures ($\text{TreasNote}_t$), and then three measures of risk ($\text{Risk}_t$). The rest of the regressors are lags of the regressors, and then also of the dependent variable. Of main interest are the first three coefficients. Ranaldo & Söderlind (2010) argues that the first three coefficients measures statistical **safe haven capabilities**. A good safe haven has $\beta_1 < 0$, $\beta_2 > 0$ and $\beta_3 > 0$. 
 
 Two non-linear models are also estimated. The first one is a partial linear model: 
 
@@ -60,7 +60,7 @@ The following specifications (version) were used for this project:
 - kernlab: (0.9.29)
 - MASS: (7.3.54)
 
-*Section 1: Preliminaries* is where the code imports the required modules for the project. To ensure proper replication without issues, make sure to install the packages under the above versions. 
+*Section 1: preliminaries* is where the code imports the required modules for the project. To ensure proper replication without issues, make sure to install the packages under the above versions. 
 
 *NOTE (a): The package "GMM" does not work on certain Mac computers due to missing "libgomp.1.dylib" dependency*. Please use Windows instead.
 *NOTE (b): if a package is not installed on the computer, you need to install the module first*. 
