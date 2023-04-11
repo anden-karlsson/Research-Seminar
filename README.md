@@ -28,40 +28,46 @@ where $D_t$ is the dummy that takes on a value of unity at the specified event-d
 
 Note that the code is separated into 11 sections:
 
-1. []
-2. []
-3. []
-4. []
-5. []
-6. []
-7. []
-8. []
-9. []
-10. []
-11. []
+1. Preliminaries
+2. Data Importation
+3. Data Handling
+4. Figure "Y"
+5. Linear regression: Model 1
+6. Cross-currencies
+7. Multiple frequency regressions
+8. Coefficient Quantiles
+9. Dummy Variable Regressions: Model 4
+10. Partial-linear: Model 2
+11. Piece-wise linear: Model 3
 
 ## 2. Preliminaries
 
 The following specifications (version) were used for this project:
-- Programming language: R (x.x.x)
-- IDE: Rstudio (x.x.x)
-- GMM: (x.x.x)
-- []: (x.x.x)
-- []: (x.x.x)
-- []: (x.x.x)
-- []: (x.x.x)
-- []: (x.x.x)
-- []: (x.x.x)
+- Operating system: Windows 10 x64 (build 19042)
+- Programming language: R (4.1.2)
+- GMM: (1.7)
+- Sandwich: (3.0.2)
+- readxl: (1.4.2)
+- tseries: (0.10.53)
+- zoo: (1.8.8)
+- xts: (0.12.0)
+- ggplot2: (3.4.1)
+- purrr: (1.0.1)
+- dplyr: (1.1.1)
+- factoextra: (1.0.7)
+- lmtest: (0.9.40)
+- stats: (4.1.2)
+- kernlab: (0.9.29)
+- MASS: (7.3.54)
 
-In *section 1* the code imports the required modules for the project and checks for the versions for each module.
+*Section 1: Preliminaries* is where the code imports the required modules for the project. To ensure proper replication without issues, make sure to install the packages under the above versions. 
 
-*NOTE (a): The package "GMM" does not work on certain MAC computers due to missing "libgomp.1.dylib" dependency*. 
+*NOTE (a): The package "GMM" does not work on certain Mac computers due to missing "libgomp.1.dylib" dependency*. Please use Windows instead.
 *NOTE (b): if a package is not installed on the computer, you need to install the module first*. 
-
 
 ## 3. Replication Files
 
-To replicate the tables and figures used in the paper, the aforementioned modules needs to be used. Ideally, use the exact same version to ensure perfect replicability. The underlying data required for replication is the underlying data file:
+To replicate the tables and figures used in the paper, the aforementioned modules needs to be used. The underlying data required for replication is the underlying data file:
 
 - Data.xlsx
 
