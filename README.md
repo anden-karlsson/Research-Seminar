@@ -16,7 +16,7 @@ $$ R^e_t = g(x_{1,t}) + \beta' x_{2,t} + \varepsilon_t $$
 
 where one regressor $x_{1,t}$ takes on any non-parametric transformation $g(\cdot)$ estimated using *Robinson's double residual method* (Robinson, 1988), while the rest takes on linear transformations. This estimation is done for $\text{SP}_t$, $\text{TreasNote}_t$ and $\text{Risk}_t$. The second non-linear model used is a piecewise linear model:
 
-$$ R^e_t = \gamma_0 + \gamma_1 x_1 + \gamma_2 \max\{x_t - \xi, 0\} + \varepsilon_t $$
+$$ R^e_t = \gamma_0 + \gamma_1 x_1 + \gamma_2 \max(x_t - \xi, 0) + \varepsilon_t $$
 
 where parameters $\gamma_0, \gamma_1, \gamma_2$ and $\xi$ are estimated using Hansen (1982) 2SGMM. This model is used to compare the non-linear effects of FX volatility to the results in Ranaldo & Söderlind (2010). In addition, a dummy variable regression is used to quantify the incremental effects on these coefficients during important dates relating to the Russia-Ukraine war, to sanctions, or macroeconomic events:
 
@@ -31,7 +31,7 @@ Note that the code is separated into 11 sections:
 1. Preliminaries
 2. Data Importation
 3. Data Handling
-4. Figure "Y"
+4. Figure 4
 5. Linear regression: Model 1
 6. Cross-currencies
 7. Multiple frequency regressions
@@ -67,7 +67,7 @@ The following specifications (version) were used for this project:
 
 ## 3. Replication Files
 
-To replicate the tables and figures used in the paper, the aforementioned modules needs to be used. The underlying data required for replication is the underlying data file:
+To replicate the tables and figures used in the paper, the aforementioned packages needs to be used. The underlying data required for replication is the underlying data file:
 
 - Data.xlsx
 
@@ -75,44 +75,23 @@ which contains data downloaded from Bloomberg and the event-dates used in the pa
 
 *NOTE:* the *Data.xlsx" file muse be in **the same folder** as the R code. 
 
-## 4. Running the Code for a Full Paper Replication
+## 4. Step-by-step Replication
 
+The code is meant to simply be executed from top to bottom. First off, importation of the packages are done in *section 1: preliminaries*. Line 26 contains a vector of all packages used and lines 29-31 imports these packages. Then *section 2: data importation* imports the data from the underlying data file (which needs to be in the same folder). First the FX data is imported, then central bank rates, market indices, and finally the event dates.
 
-(NOT FINISHED!)
-To run the code as intended, please make sure that all the modules in *section 2* are installed before importing them. Ideally, use the same versions of each module as we did. Furthermore, pay attention to *section 3: Data Importation*. In order to import the data as intended, find the working directory of all replication files and change the directory to that folder in the following line:
+In *section 3: data handling*, transformations and merges of the data is done to get the final matrix of features for Model 1. The interest rate differential is calculated using the policy rates and excess returns is calculated by subtracting this differential from the log returns. Realized volatility and log volatility is calculated before PCA is done to extract the FX volatility variable. 
 
-<img width="474" alt="Screenshot 2023-03-19 at 17 19 16" src="https://user-images.githubusercontent.com/123584534/226189518-cb964f6e-df43-456e-bd1a-235aabf8c4d4.png">
+*section 4: Figure 4* simply produces Figure 4 in the paper. This is the figure in the appendix illustrating the appreciation (depreciation) of the currencies during the first month of the war. A *.csv* is created in the current working directory. This file was used in LaTex to format **Figure 4**. The first main results are produced in *section 5: linear regression*. The output in Table I is produced here. The time-period is delimited on lines 271-272 to October 27, 2021 to March 7, 2023. At the very end of the section, on line 312 is the dataframe *Tab.I* located. This variable contains the information in **Table I** in the paper.
 
-Do *not* change the filename or sheet-name variables in the cell.
+The following section, *section 6: Cross-currencies* calculates the results of Model 1 onto different cross-currencies (non-USD denominated pairs). The interest-rate differentials must also be recalculated before running these regressions. At the very end of the section, in the variable *Tab.VI* on line 504 is the output to **Table VI** from the paper contained. In *section 7: multiple-frequency regressions* is Model 1 applied on 1-day to 5-day returns. The realized volatilites and the PCA needs to be redone at the new frequency before the regressions can be re-run. The end of the section plots each of the panels in **Figure 3** from the paper. The code also writes 3 *.csv* files (one for each panel) containing the same information. These files are used to format the figure in LaTeX. 
 
-To replicate all figures and tables used in the paper, take note of the only cell in *section 1: Model Specification*. It is in this cell where you can change between the model specifications used. As outlined in the paper, we consider 3 models: 
+*section 8: coefficient quantiles* uses the output of Table I to estimate the linear effects at the extreme values of the regressors. The output to **Table II** is contained in the variable *Tab.II* stored on line 894. The following section, *section 9: dummy variable regressions* implements Model 4 from the paper. The War, Sanctions, and Macroeconomic dummies (and "All") are created using the event dates from *Table V*. The invasion dummy is also constructed for the period February 24, 2022 to May 31, 2022. In the middle of the section, on line 1104, is the variable *Tab.III* created, which contains the output to **Table III** in the paper. Immediately afterwards, the variable *Tab.IV* is constructed, which contains the output to **Table IV** from the paper. At the very end of the section, both *Tab.III* and *Tab.IV* are stored for increased availability. 
 
-1. BHK: $e_t^{(2)}$ and $e_t^{(5)}$
-2. SML: $e_t^{(1)}$, $e_t^{(5)}$ and $e_t^{(10)}$
-3. S2: $e_t^{(1)}$ and $e_t^{(2)}$
+The two final sections contains the results of Model 2 (partial linear model) and Model 3 (piecewise linear model). *section 10: partial linear* finds the non-linear transformation $g(\cdot)$ using Robinson's double residual method. Conditional expectations are estimated using Gaussian kernel regression where the bandwidth is estimated using 10-fold cross-validation. Line 1181 defines the function implementing this validation procedure. The band-width is estimated several times using this procedure and it can take some time for this section to run because of this procedure. The best bandwidth (measured by RMSE) is chosen for the estimations. The comments of the sections outlines each step we use: a) get $E[x_2 | SP]$ by kernel regression, b) get $E[CHF | SP]$ by kernel regression, c) residualize $R^e_t$ and $x_2$, d) calculate $\beta$ from the residualized equation: $\tilde{R}^e_t = \tilde{x}_2 \beta + \tilde{u}$, and finally: e) get $g(\cdot)$ by kernel regression of $R^e_t - x_2\hat{\beta}$ on $SP$. The results are not presented in section 10, but rather jointly presented in the following section along with the piecewise linear model. 
 
-To implement the BHK model, simply uncomment the 'VARS' variable where we indicate that the BHK specification is, and then run every cell in the notebook from start to end. Note that it may take some seconds for some of the cell to execute, depending on GPU.
+In *section 11: piecewise linear*, the results of both the piecewise linear model and the partially linear model are presented. The section starts by defining the functions conditions *g5.chf*, *g5.eur*, *g5.jpy*, *g5.gbp*, *g5.trs*, and *g5.sp* which specifies the necessary moment conditions for the 2SGMM. Each function calculates and outputs the sample version of the orthogonality conditions, which is then used by the *gmm* function from the *gmm* package to perform the 2SGMM and find the estimated parameters $\theta = ( \gamma_0, \gamma_1, \gamma_2, \xi )$. The results of these estimations are stored in the variables *res_sdf.chf*, *res_sdf.eur*, *res_sdf.jpy*, *res_sdf.gbp*, *res_sdf.trs*, and *res_sdf.sp* on lines 1765-1770. The final portion of section 11 calculates the confidence bands at 95\% confidence using the confidence interval formula. From line 1868 onwards, the formatting and plotting of **Figure 1** and **Figure 2** is done. On lines 2007-2020, *.csv* files are created to output the data of Figure 1 and Figure 2. This data is used to plot the figures using te *pgflpots* package in LaTeX.
 
-<img width="296" alt="bhk_spec" src="https://user-images.githubusercontent.com/123584534/226125909-62f7ec69-46e8-4c65-8df2-960efaf1cf3b.png">
-
-Similarly, to implement the SML model, *reset the kernel* and simply uncomment the 'VARS' variable where we indicate that the SML specification is and run every cell again.
-
-<img width="286" alt="sml_spec" src="https://user-images.githubusercontent.com/123584534/226125910-a3184ce7-7965-456e-b3e6-e782f1ee2c6d.png">
-
-Finally, to implement the S2 model, *reset the kernel* and simply uncomment the 'VARS' variable where we indicate that the S2 specification is and run every cell again.
-
-<img width="299" alt="s2_spec" src="https://user-images.githubusercontent.com/123584534/226126010-f3a4b5c9-827c-4c96-a8af-aaa81f294d17.png">
-
-## 5. Where to find outputs included in the paper?
-
-Simply, for Figure 1, Figure 2, and the Appendix figures (Figure 5 and Figure 6), look at the output in sections 5, 7, and 11, respectively.
-
-In the only cell in *section 8: Predictive OLS Model*, the OLS output in Table 2 for the active model is outputted, as well as its respective panel that is in Figure 3. Therefore, to get every number in the OLS portion of Table 2, you need to run the notebook for each model and take note of the output for each active model. Similarly, to get every panel of Figure 3, you need to save the figure output for each active model.
-
-The rest of Table 2, the part that pertains to the VAR(1) model is contained under the following section, *section 9: VAR(1) Model*. In the first cell in that section you will find the output to the VAR(1) portion of Table 2. Again, the output pertains only to the active model, and to replicate the results for all models used, you will have to run the notebook for each model and take note of the output for each active model. 
-
-The last cell in *section 9: VAR(1) Model* also contains the outputs to Figure 4 in the paper. The output contains the time-series decomposition of equity yields at all maturities between 1-10 years. In Figure 4, we only include maturities 2, 5, and 10 for brevity. To find these figures, simply save the 2nd, 5th, and 10th figure in the output. Again, the output pertains only to the active model, and to replicate the figures for all models used, you will have to run the notebook for each model and take note of the output for each active model. 
-
-Finally, to replicate Table 3 from the paper, consider *section 10: Variance Decomposition*. There are 2 cells of code in the section and the second one outputs the decomposition for the active model. Again, the output pertains only to the active model, and to replicate the output for all models, you will have to run the notebook for each model and take note of the output for each active model. 
+That concludes the replication of all output in the paper.
 
 ***Fin!***
+
