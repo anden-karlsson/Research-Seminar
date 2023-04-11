@@ -37,8 +37,8 @@ Note that the code is separated into 11 sections:
 7. Multiple frequency regressions
 8. Coefficient Quantiles
 9. Dummy Variable Regressions: Model 4
-10. Partial-linear: Model 2
-11. Piece-wise linear: Model 3
+10. Partial linear: Model 2
+11. Piecewise linear: Model 3
 
 ## 2. Preliminaries
 
